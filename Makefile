@@ -1,10 +1,12 @@
+OS=$(shell uname -s | tr '[A-Z]' '[a-z]')
+
 example-benchmark: example.o
 	$(CC) $< -o $@.out -lm
 
 run: example-benchmark
 	./example-benchmark.out
 
-%.o : %.c
+%.o : %-$(OS).c
 	$(CC) -c $< -o $@
 
 clean:

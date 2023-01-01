@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <sys/time.h>
+#include <sys/utsname.h>
 
 #include "ministat.h"
 
@@ -9,13 +10,18 @@
 #define BENCHMARK(iters, ...) int main(int argc, char *argv[]) { \
     struct timespec res;                                         \
     clock_getres(CLOCK_MONOTONIC, &res);                         \
+    struct utsname name;                                         \
+    uname(&name);                                                \
     int N = iters;                                               \
     int MAX_TESTS = 7;                                           \
     int tests = -1;                                              \
     printf("\n===== Running microbench =====\n");                \
-    printf("* iterations: %u           \n", N);                  \
+    printf("* system: %s %s %s\n", name.sysname,                 \
+           name.release, name.machine);                          \
     printf("* resolution: %luns           \n", res.tv_nsec);     \
-    printf("==============================\n\n\n");              \
+    printf("* iterations: %u           \n", N);                  \
+    printf("------------------------------\n");                  \
+    printf("======= Ministat report ======\n");                  \
     double results[MAX_TESTS][N];                                \
     const char *names[MAX_TESTS];                                \
     __VA_ARGS__                                                  \
