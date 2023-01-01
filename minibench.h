@@ -7,9 +7,15 @@
 
 
 #define BENCHMARK(iters, ...) int main(int argc, char *argv[]) { \
+    struct timespec res;                                         \
+    clock_getres(CLOCK_MONOTONIC, &res);                         \
     int N = iters;                                               \
     int MAX_TESTS = 7;                                           \
     int tests = -1;                                              \
+    printf("\n===== Running microbench =====\n");                \
+    printf("* iterations: %u           \n", N);                  \
+    printf("* resolution: %luns           \n", res.tv_nsec);     \
+    printf("==============================\n\n\n");              \
     double results[MAX_TESTS][N];                                \
     const char *names[MAX_TESTS];                                \
     __VA_ARGS__                                                  \
@@ -27,6 +33,8 @@
             clock_gettime(CLOCK_MONOTONIC, &before);             \
             __VA_ARGS__                                          \
             clock_gettime(CLOCK_MONOTONIC, &after);              \
-            results[tests][i] = (after.tv_sec - before.tv_sec)*1000000000UL + (after.tv_nsec - before.tv_nsec); \
+            results[tests][i] =                                  \
+                (after.tv_sec - before.tv_sec)*1000000000UL      \
+                + (after.tv_nsec - before.tv_nsec);              \
         }                                                        \
     }
