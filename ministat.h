@@ -481,7 +481,7 @@ ministat(int ci, int nds, int n_samples, double data[][n_samples], const char* n
 			termwidth = atoi(p);
 		else if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &wsz) != -1 &&
 			 wsz.ws_col > 0)
-			termwidth = wsz.ws_col - 2;
+			termwidth = wsz.ws_col > termwidth*2 ? wsz.ws_col/2 : termwidth;
 	}
 
 	for (i = 0; i < nds; i++) {
