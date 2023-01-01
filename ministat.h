@@ -11,8 +11,6 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
-
 #include <stdio.h>
 #include <math.h>
 #include <ctype.h>
@@ -22,7 +20,6 @@ __FBSDID("$FreeBSD$");
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <sys/queue.h>
-#include <sys/ttycom.h>
 
 #define NSTUDENT 100
 #define NCONF 6

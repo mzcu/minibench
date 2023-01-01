@@ -1,20 +1,24 @@
+#define _GNU_SOURCE
 #include "minibench.h"
+#include <sched.h>
+#include <sys/syscall.h>
 
-void f1() {
-    int k = 1;
-    for (int z=0; z<100; z++) {
-        k ^= z + 1;
-    }
+unsigned int cpu;
+unsigned int node;
+
+
+void syscall_getcpu() {
+    syscall(SYS_getcpu, &cpu, &node);
 }
 
-void f2() {
-    int k = 1;
-    for (int z=0; z<1000; z++) {
-        k ^= z + 1;
-    }
-}
+void vdso_getcpu() {
+    getcpu(&cpu, &node);
+ }
 
-BENCHMARK(10,
-    TIMED("test1", f1();)
-    TIMED("test2", f2();)
+BENCHMARK(25,
+    // warmup
+    { vdso_getcpu(); syscall_getcpu(); }
+    // measured
+    TIMED("vdso-getcpu (default)", vdso_getcpu();)
+    TIMED("syscall-getcpu", syscall_getcpu();)
 )
